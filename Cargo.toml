@@ -1,0 +1,17 @@
+[package]
+name = "mass-invite-vk-bot-rust-"
+version = "0.1.0"
+edition = "2021"
+
+[dependencies]
+tokio = { version = "1", features = ["full"] }
+reqwest = { version = "0.11", default-features = false, features = ["json", "rustls-tls"] }
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+aes-gcm = "0.10"
+base64 = { version = "0.21", features = ["std"] }
+rand = "0.8"
+anyhow = "1"
+rpassword = "7"
+argon2 = "0.5"
+zeroize = "1"
