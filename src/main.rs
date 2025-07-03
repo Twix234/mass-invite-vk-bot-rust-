@@ -12,17 +12,17 @@ use reqwest::Client;
 use tokio::time::{sleep, Duration};
 use std::collections::HashSet;
 use rand::Rng;
-use rpassword::read_password;
+use rpassword::read_password_from_tty;
 
 fn prompt_manual() -> BotConfig {
     print!("Введите VK_TOKEN: ");
     io::stdout().flush().unwrap();
-    let mut token = String::new();
-    io::stdin().read_line(&mut token).unwrap();
+    let token = read_password_from_tty(Some("|")).unwrap();
+
     print!("Введите USER_ID: ");
     io::stdout().flush().unwrap();
-    let mut user_id = String::new();
-    io::stdin().read_line(&mut user_id).unwrap();
+    let user_id = read_password_from_tty(Some("|")).unwrap();
+
     BotConfig {
         vk_token: token.trim().to_string(),
         user_id: user_id.trim().parse().expect("Ошибка USER_ID"),
@@ -45,19 +45,22 @@ fn prompt_url() -> BotConfig {
             _ => {}
         }
     }
-    let token = token.expect("Не найден VK_TOKEN");
-    let user_id = if let Some(id) = user_id {
-        id
-    } else {
+
+    let token = token.unwrap_or_else(|| {
+        print!("Введите VK_TOKEN: ");
+        io::stdout().flush().unwrap();
+        read_password_from_tty(Some("|")).unwrap()
+    });
+
+    let user_id = user_id.unwrap_or_else(|| {
         print!("Введите USER_ID: ");
         io::stdout().flush().unwrap();
-        let mut id = String::new();
-        io::stdin().read_line(&mut id).unwrap();
-        id.trim().to_string()
-    };
+        read_password_from_tty(Some("|")).unwrap()
+    });
+
     BotConfig {
-        vk_token: token,
-        user_id: user_id.parse().expect("Ошибка USER_ID"),
+        vk_token: token.trim().to_string(),
+        user_id: user_id.trim().parse().expect("Ошибка USER_ID"),
     }
 }
 
