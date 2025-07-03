@@ -12,16 +12,16 @@ use reqwest::Client;
 use tokio::time::{sleep, Duration};
 use std::collections::HashSet;
 use rand::Rng;
-use rpassword::read_password_from_tty;
+use rpassword::read_password;
 
 fn prompt_manual() -> BotConfig {
     print!("Введите VK_TOKEN: ");
     io::stdout().flush().unwrap();
-    let token = read_password_from_tty(Some("|")).unwrap();
+    let token = read_password().unwrap();
 
     print!("Введите USER_ID: ");
     io::stdout().flush().unwrap();
-    let user_id = read_password_from_tty(Some("|")).unwrap();
+    let user_id = read_password().unwrap();
 
     BotConfig {
         vk_token: token.trim().to_string(),
@@ -49,13 +49,13 @@ fn prompt_url() -> BotConfig {
     let token = token.unwrap_or_else(|| {
         print!("Введите VK_TOKEN: ");
         io::stdout().flush().unwrap();
-        read_password_from_tty(Some("|")).unwrap()
+        read_password().unwrap()
     });
 
     let user_id = user_id.unwrap_or_else(|| {
         print!("Введите USER_ID: ");
         io::stdout().flush().unwrap();
-        read_password_from_tty(Some("|")).unwrap()
+        read_password().unwrap()
     });
 
     BotConfig {
@@ -134,8 +134,6 @@ async fn main() {
 
     if config_exists() {
         loop {
-            use rpassword::read_password;
-
             print!("Введите пароль: ");
             io::stdout().flush().unwrap();
             let password = read_password().unwrap();
@@ -188,4 +186,4 @@ async fn main() {
             std::fs::write("last_error.log", e).ok();
         }
     }
-}
+                }
